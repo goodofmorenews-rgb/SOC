@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self' https://cdn.tailwindcss.com; script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; style-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;">
+  <title>CNC Industrial - Autenticação Segura</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-slate-950 font-sans text-slate-100 min-h-screen flex items-center justify-center p-4 select-none">
+
+  <div class="w-full max-w-sm bg-slate-900 rounded-2xl shadow-2xl overflow-hidden border border-slate-800 p-6 space-y-6">
+    
+    <!-- Header do App -->
+    <div class="text-center space-y-2">
+      <div class="inline-flex items-center justify-center w-12 h-12 rounded-xl bg-blue-600/20 text-blue-400 border border-blue-500/30 mb-1">
+        <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+        </svg>
+      </div>
+      <h1 class="text-xl font-bold text-white tracking-wide">Plataforma CNC</h1>
+      <p class="text-xs text-slate-400">Acesso Restrito & Criptografado</p>
+    </div>
+
+    <!-- Formulário de Login -->
+    <form id="formLogin" class="space-y-4">
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Usuário / Matrícula</label>
+        <input type="text" id="usuario" required placeholder="Digite seu usuário..." class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Senha de Acesso</label>
+        <input type="password" id="senha" required placeholder="••••••••" class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+      </div>
+
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Perfil de Operação</label>
+        <select id="perfil" required class="w-full bg-slate-950 border border-slate-800 rounded-xl p-3 text-sm text-white focus:ring-2 focus:ring-blue-500 focus:outline-none">
+          <option value="operador">Operador (Apontamento Físico)</option>
+          <option value="gestor">Engenharia / Centro de Custo</option>
+        </select>
+      </div>
+
+      <button type="submit" class="w-full bg-blue-600 hover:bg-blue-500 active:bg-blue-700 text-white font-bold py-3.5 rounded-xl shadow-lg transition duration-150 text-sm mt-2">
+        Entrar no Sistema
+      </button>
+    </form>
+
+    <!-- Feedback de Erro -->
+    <div id="erroAuth" class="hidden p-3 bg-red-950/80 border border-red-800/50 rounded-xl text-red-300 text-xs text-center">
+      Credenciais inválidas. Verifique o usuário e a senha.
+    </div>
+
+  </div>
+
+  <script>
+    document.getElementById('formLogin').addEventListener('submit', (e) => {
+      e.preventDefault();
+      
+      const user = document.getElementById('usuario').value.trim();
+      const perfil = document.getElementById('perfil').value;
+
+      // Token de sessão temporário e sanitizado
+      const sessionToken = {
+        user: user.replace(/[^a-zA-Z0-9_]/g, ''),
+        perfil: perfil,
+        loginTime: new Date().toISOString()
+      };
+
+      sessionStorage.setItem('cnc_session_token', JSON.stringify(sessionToken));
+
+      // Redirecionamento por perfil
+      if (perfil === 'operador') {
+        window.location.href = 'index.html';
+      } else if (perfil === 'gestor') {
+        window.location.href = 'centro_custo.html';
+      }
+    });
+  </script>
+
+</body>
+</html>
